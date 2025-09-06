@@ -49,45 +49,45 @@ pipeline {
             }
         }
 
-        // stage('Push JAR to Nexus') {
-        //     steps {
-        //         withCredentials([usernamePassword(credentialsId: 'nexus-cred', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD')]) {
-        //             script {
-        //                 def version = sh(returnStdout: true, script: """
-        //                     docker run --rm \
-        //                         -v ${WORKSPACE}:/app \
-        //                         -w /app \
-        //                         maven:3.9.6-eclipse-temurin-21 \
-        //                         mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-        //                 """).trim()
+        stage('Push JAR to Nexus') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus-cred', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    script {
+                        def version = sh(returnStdout: true, script: """
+                            docker run --rm \
+                                -v ${WORKSPACE}:/app \
+                                -w /app \
+                                maven:3.9.6-eclipse-temurin-21 \
+                                mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+                        """).trim()
 
-        //                 def (repoUrl, repoId) = version.endsWith("SNAPSHOT") 
-        //                     ? ["http://13.201.118.87:8081/repository/maven-snapshots/", "maven-snapshots"]
-        //                     : ["http://13.201.118.87:8081/repository/maven-releases/", "maven-releases"]
+                        def (repoUrl, repoId) = version.endsWith("SNAPSHOT") 
+                            ? ["http://13.201.118.87:8081/repository/maven-snapshots/", "maven-snapshots"]
+                            : ["http://13.201.118.87:8081/repository/maven-releases/", "maven-releases"]
 
-        //                 sh """
-        //                      docker run --rm \
-        //                         -e NEXUS_USER=$NEXUS_USER \
-        //                         -e NEXUS_PASSWORD=$NEXUS_PASSWORD \
-        //                         -v ${WORKSPACE}:/app \
-        //                         -w /app \
-        //                         -v $HOME/.m2:/root/.m2 \
-        //                         maven:3.9.6-eclipse-temurin-21 \
-        //                         mvn deploy:deploy-file \
-        //                             -DgroupId=com.javaproject \
-        //                             -DartifactId=database_service_project \
-        //                             -Dversion=${version} \
-        //                             -Dpackaging=jar \
-        //                             -Dfile=target/database_service_project-${version}.jar \
-        //                             -Durl=${repoUrl} \
-        //                             -DrepositoryId=${repoId} \
-        //                             -Dusername=$NEXUS_USER \
-        //                             -Dpassword=$NEXUS_PASSWORD
-        //                 """
-        //             }
-        //         }
-        //     }
-        // }
+                        sh """
+                             docker run --rm \
+                                -e NEXUS_USER=$NEXUS_USER \
+                                -e NEXUS_PASSWORD=$NEXUS_PASSWORD \
+                                -v ${WORKSPACE}:/app \
+                                -w /app \
+                                -v $HOME/.m2:/root/.m2 \
+                                maven:3.9.6-eclipse-temurin-21 \
+                                mvn deploy:deploy-file \
+                                    -DgroupId=com.javaproject \
+                                    -DartifactId=database_service_project \
+                                    -Dversion=${version} \
+                                    -Dpackaging=jar \
+                                    -Dfile=target/database_service_project-${version}.jar \
+                                    -Durl=${repoUrl} \
+                                    -DrepositoryId=${repoId} \
+                                    -Dusername=$NEXUS_USER \
+                                    -Dpassword=$NEXUS_PASSWORD
+                        """
+                    }
+                }
+            }
+        }
 
 stage('Docker Build & Push to ECR') {
     steps {
