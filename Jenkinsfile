@@ -80,7 +80,7 @@ pipeline {
                                     -Dpackaging=jar \
                                     -Dfile=target/database_service_project-${version}.jar \
                                     -Durl=${repoUrl} \
-                                    -DrepositoryId=nexus-releases \
+                                    -DrepositoryId=maven-releases \
                                     -Dusername=$NEXUS_USER \
                                     -Dpassword=$NEXUS_PASSWORD
                         """
