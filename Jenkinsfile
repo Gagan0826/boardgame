@@ -106,8 +106,7 @@ stage('Docker Build & Push to ECR') {
                 docker push ${ECR_REPO}:${buildTag}
 
                 # Tag the same image as latest (no rebuild)
-                docker tag ${ECR_REPO}:${buildTag} ${ECR_REPO}:latest
-                docker push ${ECR_REPO}:latest
+                docker tag ${ECR_REPO}:${buildTag} ${ECR_REPO}
             """
                }
             }
