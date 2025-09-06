@@ -111,20 +111,14 @@ stage('Docker Build & Push to ECR') {
                }
             }
         }
-    stage('Checkout K8s Manifests') {
-        steps {
-            dir('manifests') {
-                git branch: 'main', url: 'https://github.com/gagan0826/manifests-repo'
-            }
-        }
-    }
+
     stage('Deploy to EKS') {
         steps {
             script {
             sh """
                 aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}
-                sed -i "s|<tag>|${BUILD_NUMBER}|g" manifests/k8s/deployment.yaml
-                kubectl apply -f manifests/k8s/
+                sed -i "s|<tag>|${BUILD_NUMBER}|g" deployment-service.yaml
+                kubectl apply -f deployment-service.yaml/
             """
                 }
             }
