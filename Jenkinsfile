@@ -118,7 +118,7 @@ stage('Docker Build & Push to ECR') {
             sh """
                 aws eks update-kubeconfig --region ${AWS_REGION} --name Java-application-deployment
                 sed -i "s|<tag>|${BUILD_NUMBER}|g" deployment-service.yaml
-                kubectl apply -f deployment-service.yaml/
+                kubectl apply -f deployment-service.yaml
             """
                 }
             }
