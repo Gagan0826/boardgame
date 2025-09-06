@@ -61,12 +61,12 @@ pipeline {
                                 mvn help:evaluate -Dexpression=project.version -q -DforceStdout
                         """).trim()
 
-                        def repoUrl = version.endsWith("SNAPSHOT") 
-                            ? "http://13.201.118.87:8081/repository/maven-snapshots/" 
-                            : "http://13.201.118.87:8081/repository/maven-releases/"
+                        def (repoUrl, repoId) = version.endsWith("SNAPSHOT") 
+                            ? ["http://13.201.118.87:8081/repository/maven-snapshots/", "maven-snapshots"]
+                            : ["http://13.201.118.87:8081/repository/maven-releases/", "maven-releases"]
 
                         sh """
-                            docker run --rm \
+                             docker run --rm \
                                 -e NEXUS_USER=$NEXUS_USER \
                                 -e NEXUS_PASSWORD=$NEXUS_PASSWORD \
                                 -v ${WORKSPACE}:/app \
@@ -80,7 +80,7 @@ pipeline {
                                     -Dpackaging=jar \
                                     -Dfile=target/database_service_project-${version}.jar \
                                     -Durl=${repoUrl} \
-                                    -DrepositoryId=maven-releases \
+                                    -DrepositoryId=${repoId} \
                                     -Dusername=$NEXUS_USER \
                                     -Dpassword=$NEXUS_PASSWORD
                         """
