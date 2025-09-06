@@ -62,7 +62,7 @@ pipeline {
                         """).trim()
 
                         def repoUrl = version.endsWith("SNAPSHOT") 
-                            ? "http:/13.201.118.87:8081/repository/maven-snapshots/" 
+                            ? "http://13.201.118.87:8081/repository/maven-snapshots/" 
                             : "http://13.201.118.87:8081/repository/maven-releases/"
 
                         sh """
@@ -125,6 +125,5 @@ stage('Docker Build & Push to ECR') {
                 }
             }
         }
-
     }
 }
