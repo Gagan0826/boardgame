@@ -62,8 +62,8 @@ pipeline {
                         """).trim()
 
                         def repoUrl = version.endsWith("SNAPSHOT") 
-                            ? "http://43.205.253.200:8081/repository/maven-snapshots/" 
-                            : "http://43.205.253.200:8081/repository/maven-releases/"
+                            ? "http:/13.201.118.87:8081/repository/maven-snapshots/" 
+                            : "http://13.201.118.87:8081/repository/maven-releases/"
 
                         sh """
                             docker run --rm \
